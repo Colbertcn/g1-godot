@@ -1,0 +1,71 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/level_manager.gd" id="1_level_manager"]
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="2_player_scene"]
+[ext_resource type="PackedScene" path="res://scenes/hud.tscn" id="3_hud_scene"]
+[ext_resource type="PackedScene" path="res://scenes/upgrade_menu.tscn" id="4_upgrade_menu"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_level_manager")
+
+[node name="HUD" parent="." instance=ExtResource("3_hud_scene")]
+
+[node name="UpgradeMenu" parent="." instance=ExtResource("4_upgrade_menu")]
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2(1280, 0)
+
+[node name="ColorRect" type="ColorRect" parent="ParallaxBackground/ParallaxLayer"]
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0.1, 0.1, 0.15, 1)
+
+[node name="Stars" type="CPUParticles2D" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2(640, 360)
+amount = 200
+lifetime = 10.0
+preprocess = 10.0
+emission_shape = 3
+emission_rect_extents = Vector2(640, 360)
+direction = Vector2(-1, 0)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 50.0
+scale_amount_min = 1.0
+scale_amount_max = 3.0
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(640, 360)
+
+[node name="Player" parent="." instance=ExtResource("2_player_scene")]
+position = Vector2(200, 360)
+
+[connection signal="health_changed" from="Player" to="HUD" method="_on_player_health_changed"]
+[connection signal="shield_changed" from="Player" to="HUD" method="_on_player_shield_changed"]
+[connection signal="level_up_triggered" from="Player" to="UpgradeMenu" method="show_menu"]
+[connection signal="upgrade_selected" from="UpgradeMenu" to="Player" method="_on_upgrade_selected"]
+
+[node name="Obstacles" type="Node2D" parent="."]
+
+[node name="Obstacle1" type="StaticBody2D" parent="Obstacles"]
+position = Vector2(800, 200)
+
+[node name="Polygon2D" type="Polygon2D" parent="Obstacles/Obstacle1"]
+polygon = PackedVector2Array(-40, -40, 40, -40, 40, 40, -40, 40)
+color = Color(0.5, 0.3, 0.2, 1)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Obstacles/Obstacle1"]
+polygon = PackedVector2Array(-40, -40, 40, -40, 40, 40, -40, 40)
+
+[node name="Obstacle2" type="StaticBody2D" parent="Obstacles"]
+position = Vector2(1500, 500)
+
+[node name="Polygon2D" type="Polygon2D" parent="Obstacles/Obstacle2"]
+polygon = PackedVector2Array(-50, -20, 50, -20, 50, 20, -50, 20)
+color = Color(0.5, 0.3, 0.2, 1)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Obstacles/Obstacle2"]
+polygon = PackedVector2Array(-50, -20, 50, -20, 50, 20, -50, 20)
