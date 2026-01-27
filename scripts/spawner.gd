@@ -1,6 +1,9 @@
 extends Node2D
 
-@export var enemy_scenes: Array[PackedScene] = [preload("res://scenes/enemy_scout.tscn")]
+@export var enemy_scenes: Array[PackedScene] = [
+	preload("res://scenes/enemy_scout.tscn"),
+	preload("res://scenes/enemy_dog.tscn")
+]
 @export var spawn_interval: float = 2.0
 @export var spawn_distance_ahead: float = 800.0
 

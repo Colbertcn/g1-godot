@@ -31,7 +31,9 @@ var fire_rate: float = 0.2
 var fire_timer: float = 0.0
 
 # 模式
-var weapon_mode: int = 0
+enum WeaponType { BALANCED, SPREAD, PIERCING }
+@export var current_weapon: WeaponType = WeaponType.BALANCED
+var weapon_mode: int = 0 # 0: Normal, 1: Focus (can be used to narrow spread)
 var wingman_mode: int = 0:
 	set(value):
 		wingman_mode = value
@@ -81,15 +83,46 @@ func _input(event):
 	if !is_auto_firing and event.is_action_pressed("ui_accept"):
 		shoot()
 	if event.is_action_pressed("switch_weapon_mode"):
-		weapon_mode = (weapon_mode + 1) % 2
+		# For prototype, cycle weapon types.
+		# In full game, this might toggle Focused vs Spread for the current weapon.
+		current_weapon = (current_weapon + 1 as WeaponType) % 3 as WeaponType
+		print("Current Weapon: ", current_weapon)
 	if event.is_action_pressed("switch_wingman_mode"):
 		wingman_mode = (wingman_mode + 1) % 2
 
 func shoot():
-	if bullet_scene:
+	if not bullet_scene:
+		return
+
+	match current_weapon:
+		WeaponType.BALANCED:
+			fire_balanced()
+		WeaponType.SPREAD:
+			fire_spread()
+		WeaponType.PIERCING:
+			fire_piercing()
+
+func fire_balanced():
+	var bullet = bullet_scene.instantiate()
+	get_parent().add_child(bullet)
+	bullet.global_transform = muzzle.global_transform
+
+func fire_spread():
+	var angles = [-15, 0, 15]
+	for angle in angles:
 		var bullet = bullet_scene.instantiate()
 		get_parent().add_child(bullet)
 		bullet.global_transform = muzzle.global_transform
+		bullet.rotation_degrees += angle
+
+func fire_piercing():
+	var bullet = bullet_scene.instantiate()
+	if bullet.has_method("set_piercing"):
+		bullet.set_piercing(true)
+	get_parent().add_child(bullet)
+	bullet.global_transform = muzzle.global_transform
+	# Visually distinguish
+	bullet.modulate = Color(0.5, 1.0, 1.0)
 
 func add_wingman():
 	if wingman_scene:
