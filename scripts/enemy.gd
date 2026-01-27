@@ -28,10 +28,10 @@ func spawn_xp():
 	if xp_gem_scene:
 		var gem = xp_gem_scene.instantiate()
 		gem.xp_amount = xp_value
-		get_parent().add_child(gem)
+		get_parent().add_child.call_deferred(gem)
 		gem.global_position = global_position
 
-func _on_area_entered(area):
+func _on_area_entered(_area):
 	pass
 
 func _on_body_entered(body):
