@@ -60,7 +60,7 @@ func _ready():
 	add_wingman()
 	add_wingman()
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	var direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	velocity = direction * speed
 	move_and_slide()
@@ -163,7 +163,7 @@ func take_damage(amount: float):
 		die()
 
 func die():
-	get_tree().reload_current_scene()
+	get_tree().call_deferred("reload_current_scene")
 
 func add_xp(amount: float):
 	xp += amount
