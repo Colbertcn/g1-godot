@@ -47,6 +47,7 @@ var shield_regen_timer: float = 0.0
 @onready var muzzle = $Muzzle
 
 func _ready():
+	add_to_group("player")
 	health = max_health
 	shield = max_shield
 	health_changed.emit(health, max_health)
