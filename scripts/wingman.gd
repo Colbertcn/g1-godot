@@ -13,9 +13,7 @@ var max_shield: float = 100.0
 @onready var muzzle = $Muzzle
 
 func _process(delta):
-	if not target:
-		return
-
+	if not target: return
 	var target_pos = target.global_position + offset
 	global_position = global_position.lerp(target_pos, follow_speed * delta)
 

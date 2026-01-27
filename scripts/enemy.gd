@@ -16,8 +16,7 @@ func _ready():
 
 func take_damage(amount: float):
 	health -= amount
-	if health <= 0:
-		die()
+	if health <= 0: die()
 
 func die():
 	died.emit(xp_value)

@@ -33,7 +33,7 @@ var fire_timer: float = 0.0
 # 模式
 enum WeaponType { BALANCED, SPREAD, PIERCING }
 @export var current_weapon: WeaponType = WeaponType.BALANCED
-var weapon_mode: int = 0 # 0: Normal, 1: Focus (can be used to narrow spread)
+var weapon_mode: int = 0
 var wingman_mode: int = 0:
 	set(value):
 		wingman_mode = value
@@ -56,7 +56,6 @@ func _ready():
 	health_changed.emit(health, max_health)
 	shield_changed.emit(shield, max_shield)
 
-	# 测试用：初始僚机
 	add_wingman()
 	add_wingman()
 
@@ -83,24 +82,17 @@ func _input(event):
 	if !is_auto_firing and event.is_action_pressed("ui_accept"):
 		shoot()
 	if event.is_action_pressed("switch_weapon_mode"):
-		# For prototype, cycle weapon types.
-		# In full game, this might toggle Focused vs Spread for the current weapon.
 		current_weapon = (current_weapon + 1 as WeaponType) % 3 as WeaponType
-		print("Current Weapon: ", current_weapon)
 	if event.is_action_pressed("switch_wingman_mode"):
 		wingman_mode = (wingman_mode + 1) % 2
 
 func shoot():
 	if not bullet_scene:
 		return
-
 	match current_weapon:
-		WeaponType.BALANCED:
-			fire_balanced()
-		WeaponType.SPREAD:
-			fire_spread()
-		WeaponType.PIERCING:
-			fire_piercing()
+		WeaponType.BALANCED: fire_balanced()
+		WeaponType.SPREAD: fire_spread()
+		WeaponType.PIERCING: fire_piercing()
 
 func fire_balanced():
 	var bullet = bullet_scene.instantiate()
@@ -121,7 +113,6 @@ func fire_piercing():
 		bullet.set_piercing(true)
 	get_parent().add_child(bullet)
 	bullet.global_transform = muzzle.global_transform
-	# Visually distinguish
 	bullet.modulate = Color(0.5, 1.0, 1.0)
 
 func add_wingman():
@@ -136,10 +127,10 @@ func update_wingmen_positions():
 	for i in range(wingmen.size()):
 		var wm = wingmen[i]
 		var target_offset = Vector2(-40, 0)
-		if wingman_mode == 0: # 集中
+		if wingman_mode == 0:
 			target_offset.y = (i + 1) * 20 if i % 2 == 0 else -(i + 1) * 20
 			target_offset.x = -40
-		else: # 扩散
+		else:
 			target_offset.y = (i + 1) * 50 if i % 2 == 0 else -(i + 1) * 50
 			target_offset.x = -60
 		wm.offset = target_offset
@@ -150,25 +141,20 @@ func regen_shield():
 
 func take_damage(amount: float):
 	if shield > 0:
-		if shield >= amount:
-			shield -= amount
+		if shield >= amount: shield -= amount
 		else:
 			var remaining = amount - shield
 			shield = 0
 			health -= remaining
-	else:
-		health -= amount
-
-	if health <= 0:
-		die()
+	else: health -= amount
+	if health <= 0: die()
 
 func die():
 	get_tree().call_deferred("reload_current_scene")
 
 func add_xp(amount: float):
 	xp += amount
-	if xp >= xp_to_next_level:
-		level_up()
+	if xp >= xp_to_next_level: level_up()
 
 func level_up():
 	xp -= xp_to_next_level
@@ -177,8 +163,7 @@ func level_up():
 	health = min(health + max_health * 0.2, max_health)
 	shield = min(shield + max_shield * 0.2, max_shield)
 	for wm in wingmen:
-		if wm.has_method("restore_shield"):
-			wm.restore_shield()
+		if wm.has_method("restore_shield"): wm.restore_shield()
 	level_up_triggered.emit()
 
 func _on_upgrade_selected(choice):

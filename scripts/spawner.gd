@@ -17,15 +17,10 @@ func _process(delta):
 		timer = 0.0
 
 func spawn_enemy():
-	if enemy_scenes.is_empty():
-		return
-
+	if enemy_scenes.is_empty(): return
 	var camera_pos = Vector2.ZERO
-	if not camera:
-		camera = get_viewport().get_camera_2d()
-
-	if camera:
-		camera_pos = camera.get_screen_center_position()
+	if not camera: camera = get_viewport().get_camera_2d()
+	if camera: camera_pos = camera.get_screen_center_position()
 
 	var spawn_pos = Vector2.ZERO
 	spawn_pos.x = camera_pos.x + spawn_distance_ahead
