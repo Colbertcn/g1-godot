@@ -7,7 +7,6 @@ extends Area2D
 var target: Node2D = null
 
 func _ready():
-	# Try to find player in group
 	var players = get_tree().get_nodes_in_group("player")
 	if players.size() > 0:
 		target = players[0]

@@ -16,12 +16,9 @@ func _process(delta):
 	if not target:
 		return
 
-	# Follow target with offset
 	var target_pos = target.global_position + offset
 	global_position = global_position.lerp(target_pos, follow_speed * delta)
 
-	# Shooting logic (synced with auto-fire of player if desired, or independent)
-	# For now, independent auto-fire if player is auto-firing
 	if target.has_method("get_auto_fire") and target.get_auto_fire():
 		fire_timer += delta
 		if fire_timer >= fire_rate:
@@ -34,18 +31,11 @@ func shoot():
 		get_parent().add_child(bullet)
 		bullet.global_transform = muzzle.global_transform
 
+func restore_shield():
+	shield = max_shield
+
 func take_damage(amount: float):
 	shield -= amount
 	if shield <= 0:
-		deactivate()
-
-func deactivate():
-	# Visual only for now or disable
-	visible = false
-	set_process(false)
-	print("Wingman down!")
-
-func get_auto_fire():
-	if target and target.has_method("get_auto_fire"):
-		return target.get_auto_fire()
-	return false
+		visible = false
+		set_process(false)

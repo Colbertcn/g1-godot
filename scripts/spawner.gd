@@ -26,7 +26,6 @@ func spawn_enemy():
 
 	var spawn_pos = Vector2.ZERO
 	spawn_pos.x = camera_pos.x + spawn_distance_ahead
-	# Random Y within viewport
 	var viewport_height = get_viewport_rect().size.y
 	spawn_pos.y = randf_range(50, viewport_height - 50)
 

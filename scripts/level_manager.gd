@@ -5,13 +5,9 @@ extends Node2D
 @onready var player = $Player
 
 func _physics_process(delta):
-	# Move the camera forward
 	camera.position.x += scroll_speed * delta
-
-	# Move player with camera
 	player.position.x += scroll_speed * delta
 
-	# Clamp player within camera view
 	var viewport_rect = get_viewport_rect()
 	var camera_pos = camera.get_screen_center_position()
 	var half_width = (viewport_rect.size.x / camera.zoom.x) / 2
