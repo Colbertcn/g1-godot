@@ -30,6 +30,6 @@ text = "SWAP"
 horizontal_alignment = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_swap")
+shape = SubResource("CircleShape2D_swap")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

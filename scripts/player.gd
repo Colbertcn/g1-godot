@@ -56,7 +56,6 @@ func _ready():
 	health_changed.emit(health, max_health)
 	shield_changed.emit(shield, max_shield)
 
-	# 初始增加一个攻击型和一个防御型僚机用于演示
 	add_wingman(0) # Attack
 	add_wingman(1) # Defense
 
@@ -119,9 +118,7 @@ func fire_piercing():
 func add_wingman(type: int = 0): # 0: Attack, 1: Defense
 	if wingman_scene:
 		if wingmen.size() >= 5:
-			print("Max wingmen reached!")
 			return
-
 		var wm = wingman_scene.instantiate()
 		wm.type = type
 		get_parent().add_child.call_deferred(wm)
@@ -177,7 +174,6 @@ func _on_upgrade_selected(choice):
 		1: speed += 50
 		2: fire_rate = max(0.05, fire_rate - 0.02)
 		3:
-			# Choose type based on some logic or just toggle
 			var type = 1 if wingmen.size() % 2 != 0 else 0
 			add_wingman(type)
 

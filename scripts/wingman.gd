@@ -23,12 +23,12 @@ func _ready():
 		if absorption_area:
 			absorption_area.visible = true
 			absorption_area.monitoring = true
-		modulate = Color(0.4, 0.6, 1.0) # Blue-ish for defense
+		modulate = Color(0.4, 0.6, 1.0)
 	else:
 		if absorption_area:
 			absorption_area.visible = false
 			absorption_area.monitoring = false
-		modulate = Color(1.0, 0.6, 0.4) # Orange-ish for attack
+		modulate = Color(1.0, 0.6, 0.4)
 
 func _process(delta):
 	if not target: return
@@ -60,7 +60,6 @@ func take_damage(amount: float):
 		set_process(false)
 
 func _on_absorption_area_area_entered(area):
-	# Assuming enemy bullets are in "enemy_bullets" group
 	if type == WingmanType.DEFENSE and area.is_in_group("enemy_bullets"):
 		var damage_amount = 5.0
 		if area.has_method("get_damage"):
@@ -69,13 +68,10 @@ func _on_absorption_area_area_entered(area):
 		area.queue_free()
 
 func _on_hitbox_area_entered(area):
-	# Collide with enemies or enemy bullets
 	if area is Enemy or area.is_in_group("enemy_bullets"):
 		var damage_amount = 10.0
 		if area.has_method("get_damage"):
 			damage_amount = area.get_damage()
 		take_damage(damage_amount)
-
-		# If it's a bullet, destroy it
 		if area.is_in_group("enemy_bullets"):
 			area.queue_free()

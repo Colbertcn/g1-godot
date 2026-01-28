@@ -6,10 +6,10 @@ extends Node2D
 @onready var spawner = get_node_or_null("Spawner")
 
 @export var swap_station_scene: PackedScene = preload("res://scenes/swap_station.tscn")
-@export var buffer_segment_interval: float = 30.0 # Every 30s
+@export var buffer_segment_interval: float = 30.0
 var buffer_timer: float = 0.0
 var in_buffer: bool = false
-var buffer_duration: float = 10.0 # Buffer lasts 10s
+var buffer_duration: float = 10.0
 var current_buffer_timer: float = 0.0
 
 func _physics_process(delta):
@@ -29,7 +29,6 @@ func _physics_process(delta):
 	player.position.x = clamp(player.position.x, min_x, max_x)
 	player.position.y = clamp(player.position.y, min_y, max_y)
 
-	# Buffer logic
 	handle_buffer_segment(delta)
 
 func handle_buffer_segment(delta):
@@ -53,7 +52,6 @@ func start_buffer():
 	if spawner:
 		spawner.set_active(false)
 
-	# Spawn Swap Station ahead
 	if swap_station_scene:
 		var station = swap_station_scene.instantiate()
 		add_child.call_deferred(station)
