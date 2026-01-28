@@ -20,15 +20,16 @@ func take_damage(amount: float):
 
 func die():
 	died.emit(xp_value)
-	spawn_xp()
+	var spawn_pos = global_position
+	# Use lambda or separate function to defer spawning with position
+	(func(pos):
+		if xp_gem_scene:
+			var gem = xp_gem_scene.instantiate()
+			gem.xp_amount = xp_value
+			get_parent().add_child(gem)
+			gem.global_position = pos
+	).call_deferred(spawn_pos)
 	queue_free()
-
-func spawn_xp():
-	if xp_gem_scene:
-		var gem = xp_gem_scene.instantiate()
-		gem.xp_amount = xp_value
-		get_parent().add_child.call_deferred(gem)
-		gem.global_position = global_position
 
 func _on_area_entered(_area):
 	pass
