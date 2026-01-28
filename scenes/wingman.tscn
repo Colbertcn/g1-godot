@@ -1,0 +1,42 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/wingman.gd" id="1_wingman_script"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_absorption"]
+radius = 40.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_body"]
+radius = 10.0
+
+[node name="Wingman" type="Node2D"]
+script = ExtResource("1_wingman_script")
+
+[node name="Body" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-10, -5, 10, -5, 15, 0, 10, 5, -10, 5)
+color = Color(1, 1, 1, 1)
+
+[node name="Muzzle" type="Marker2D" parent="."]
+position = Vector2(20, 0)
+
+[node name="AbsorptionArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 16
+monitoring = false
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AbsorptionArea"]
+shape = SubResource("CircleShape2D_absorption")
+
+[node name="VisualRing" type="Polygon2D" parent="AbsorptionArea"]
+color = Color(0.3, 0.5, 1, 0.2)
+polygon = PackedVector2Array(0, -40, 28, -28, 40, 0, 28, 28, 0, 40, -28, 28, -40, 0, -28, -28)
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 1
+collision_mask = 20
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("CircleShape2D_body")
+
+[connection signal="area_entered" from="AbsorptionArea" to="." method="_on_absorption_area_area_entered"]
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
