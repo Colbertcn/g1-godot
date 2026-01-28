@@ -56,8 +56,8 @@ func _ready():
 	health_changed.emit(health, max_health)
 	shield_changed.emit(shield, max_shield)
 
-	add_wingman(0) # Attack
-	add_wingman(1) # Defense
+	add_wingman()
+	add_wingman()
 
 func _physics_process(_delta):
 	var direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
@@ -115,12 +115,9 @@ func fire_piercing():
 	bullet.global_transform = muzzle.global_transform
 	bullet.modulate = Color(0.5, 1.0, 1.0)
 
-func add_wingman(type: int = 0): # 0: Attack, 1: Defense
+func add_wingman():
 	if wingman_scene:
-		if wingmen.size() >= 5:
-			return
 		var wm = wingman_scene.instantiate()
-		wm.type = type
 		get_parent().add_child.call_deferred(wm)
 		wm.target = self
 		wingmen.append(wm)
@@ -173,9 +170,7 @@ func _on_upgrade_selected(choice):
 	match choice:
 		1: speed += 50
 		2: fire_rate = max(0.05, fire_rate - 0.02)
-		3:
-			var type = 1 if wingmen.size() % 2 != 0 else 0
-			add_wingman(type)
+		3: add_wingman()
 
 func get_auto_fire():
 	return is_auto_firing

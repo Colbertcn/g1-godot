@@ -9,10 +9,8 @@ extends Node2D
 
 var timer: float = 0.0
 @onready var camera = get_viewport().get_camera_2d()
-var is_active: bool = true
 
 func _process(delta):
-	if not is_active: return
 	timer += delta
 	if timer >= spawn_interval:
 		spawn_enemy()
@@ -33,8 +31,3 @@ func spawn_enemy():
 	var enemy = enemy_scene.instantiate()
 	get_parent().add_child(enemy)
 	enemy.global_position = spawn_pos
-
-func set_active(active: bool):
-	is_active = active
-	if not is_active:
-		timer = 0.0
